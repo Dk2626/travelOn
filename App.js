@@ -8,18 +8,23 @@ import Tabs from "./Navigator/Tabs";
 import SignupScreen from "./Screens/SignupScreen";
 import { auth } from "./Firebase/firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ApiContext } from "./ApiContext/ApiContext";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   console.log(`user`, user);
+  console.log(`isLoggedIn`, isLoggedIn);
 
   const getUser = async () => {
     try {
-      let users = await AsyncStorage.getItem("User");
-      if (users !== null) {
-        setUser(JSON.parse(users));
+      let getUser = await AsyncStorage.getItem("User");
+      console.log(`getUser`, getUser);
+      if (getUser !== null) {
+        setUser(JSON.parse(getUser));
+        setIsLoggedIn(true);
       }
     } catch (error) {
       console.log("getUserError", error);
@@ -31,23 +36,25 @@ export default function App() {
   }, []);
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <>
-          {!user ? (
-            <>
-              <Stack.Screen name="Login" component={LoginScreen} />
-              <Stack.Screen name="Signup" component={SignupScreen} />
-            </>
-          ) : (
-            <Stack.Screen name="Home" component={Tabs} />
-          )}
-        </>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ApiContext.Provider value={{ setIsLoggedIn }}>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <>
+            {isLoggedIn ? (
+              <Stack.Screen name="Home" component={Tabs} />
+            ) : (
+              <>
+                <Stack.Screen name="Login" component={LoginScreen} />
+                <Stack.Screen name="Signup" component={SignupScreen} />
+              </>
+            )}
+          </>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ApiContext.Provider>
   );
 }

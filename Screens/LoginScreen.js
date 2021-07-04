@@ -37,8 +37,8 @@ const LoginScreen = ({ navigation }) => {
   const storeUser = async (user) => {
     console.log("user", user);
     try {
-      let users = await AsyncStorage.setItem("User", JSON.stringify(user));
-      console.log(`users`, users);
+      let storeUser = await AsyncStorage.setItem("User", JSON.stringify(user));
+      console.log(`storeUser`, storeUser);
     } catch (error) {
       console.log("storeUserError", error);
     }
