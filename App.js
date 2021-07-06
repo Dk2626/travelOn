@@ -6,7 +6,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "./Screens/LoginScreen";
 import Tabs from "./Navigator/Tabs";
 import SignupScreen from "./Screens/SignupScreen";
-import { auth } from "./Firebase/firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ApiContext } from "./ApiContext/ApiContext";
 
@@ -21,7 +20,6 @@ export default function App() {
   const getUser = async () => {
     try {
       let getUser = await AsyncStorage.getItem("User");
-      console.log(`getUser`, getUser);
       if (getUser !== null) {
         setUser(JSON.parse(getUser));
         setIsLoggedIn(true);

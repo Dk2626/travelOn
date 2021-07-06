@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import {
   Text,
   View,
@@ -11,8 +11,10 @@ import {
 import { auth } from "../Firebase/firebase";
 import { Entypo } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ApiContext } from "../ApiContext/ApiContext";
 
 const LoginScreen = ({ navigation }) => {
+  const { setIsLoggedIn } = useContext(ApiContext);
   const { width, height } = useWindowDimensions();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,8 +28,8 @@ const LoginScreen = ({ navigation }) => {
     auth
       .signInWithEmailAndPassword(email, password)
       .then((authUser) => {
-        console.log(`authUser`, authUser);
         storeUser(authUser.user);
+        setIsLoggedIn(true);
       })
       .catch((error) => {
         console.log(`error`, error);
@@ -35,10 +37,8 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const storeUser = async (user) => {
-    console.log("user", user);
     try {
-      let storeUser = await AsyncStorage.setItem("User", JSON.stringify(user));
-      console.log(`storeUser`, storeUser);
+      await AsyncStorage.setItem("User", JSON.stringify(user));
     } catch (error) {
       console.log("storeUserError", error);
     }

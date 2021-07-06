@@ -11,7 +11,6 @@ const HomeScreen = () => {
     auth
       .signOut()
       .then(() => {
-        console.log("Signout sucees");
         removeUser();
         setIsLoggedIn(false);
       })
@@ -20,8 +19,7 @@ const HomeScreen = () => {
 
   const removeUser = async () => {
     try {
-      let removeUser = await AsyncStorage.removeItem("User");
-      console.log(`removeUser`, removeUser);
+      await AsyncStorage.removeItem("User");
     } catch (error) {
       console.log("removeUserError", error);
     }

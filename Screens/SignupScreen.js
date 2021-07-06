@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Text,
   View,
@@ -12,8 +12,10 @@ import {
 import db, { auth } from "../Firebase/firebase";
 import { Entypo } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ApiContext } from "../ApiContext/ApiContext";
 
 const SignupScreen = ({ navigation }) => {
+  const { setIsLoggedIn } = useContext(ApiContext);
   const { width, height } = useWindowDimensions();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -29,8 +31,14 @@ const SignupScreen = ({ navigation }) => {
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((authUser) => {
-        console.log(`authUser`, authUser);
+        db.ref(`Users/${authUser.user.uid}`).set({
+          Name: name,
+          Number: number,
+          Email: email,
+          UserId: authUser.user.uid,
+        });
         storeUser(authUser.user);
+        setIsLoggedIn(true);
       })
       .catch((error) => {
         console.log(`error`, error);
@@ -38,10 +46,8 @@ const SignupScreen = ({ navigation }) => {
   };
 
   const storeUser = async (user) => {
-    console.log("user", user);
     try {
-      let storeUser = await AsyncStorage.setItem("User", JSON.stringify(user));
-      console.log(`storeUser`, storeUser);
+      await AsyncStorage.setItem("User", JSON.stringify(user));
     } catch (error) {
       console.log("storeUserError", error);
     }
