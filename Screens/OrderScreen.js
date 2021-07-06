@@ -1,14 +1,19 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 const OrderScreen = () => {
   return (
-    <View>
-      <Text>Order</Text>
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "black",
+      }}
+    >
+      <Text style={{ color: "white" }}>Order</Text>
     </View>
   );
 };
 
 export default OrderScreen;
-
-const styles = StyleSheet.create({});
